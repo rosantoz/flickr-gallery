@@ -1,0 +1,14 @@
+#loading {
+    width: 43px;
+    height: 11px;
+    display: none;
+    background: url('../img/loading.gif') no-repeat;
+}
+
+#results {
+    display: none;
+}
+
+.pagination {
+    display: none;
+}
