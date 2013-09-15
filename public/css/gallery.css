@@ -12,3 +12,8 @@
 .pagination {
     display: none;
 }
+
+#records-found {
+    display: none;
+    font-weight: bold;
+}

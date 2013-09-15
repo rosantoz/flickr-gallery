@@ -9,8 +9,10 @@ use Rds\Flickr;
 $flickr = new Flickr;
 
 $searchInput = isset($_POST['search']) ? $_POST['search'] : '';
+$page = isset($_POST['page']) ? $_POST['page'] : 1;
 
 $flickr->setTag($searchInput);
+$flickr->setPage($page);
 
 $search = $flickr->search();
 

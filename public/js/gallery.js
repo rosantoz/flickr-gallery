@@ -1,5 +1,5 @@
 var Gallery = {
-    search: function (search, page) {
+    search      : function (search, page) {
         page = typeof page !== 'undefined' ? page : 1;
 
         var promise = $.Deferred();
@@ -14,6 +14,9 @@ var Gallery = {
                 var xmlDoc = $.parseXML(response)
                     , xml = $(xmlDoc)
                     , photos = xml.find('photo')
+                    , currentPage = xml.find('photos').attr('page')
+                    , totalPages = xml.find('photos').attr('pages')
+                    , recordsFound = xml.find('photos').attr('total')
                     , thumbnails = $('.thumbnails')
                     , photoUrl;
 
@@ -39,6 +42,13 @@ var Gallery = {
 
                     $('#query').text('"' + search + '"');
                     $('#searchInput').val('');
+
+                    if (totalPages > 1) {
+                        Gallery.pagination(currentPage, totalPages, search);
+                    }
+
+                    Gallery.recordsFound(recordsFound);
+
                 });
 
             },
@@ -54,7 +64,27 @@ var Gallery = {
             }
         });
         return promise;
+    },
+    pagination  : function (current, total, search) {
+        var options = {
+            currentPage  : current,
+            totalPages   : total,
+            search       : search,
+            onPageClicked: function (e, originalEvent, type, page) {
+                Gallery.search(search, page);
+            }
+        }
 
+        $('#pagination').bootstrapPaginator(options);
+    },
+    recordsFound: function (recordsFound) {
+        var elementRecordsFound = $('#records-found');
+        elementRecordsFound.text('');
+        if (recordsFound > 0) {
+            elementRecordsFound.text(recordsFound + ' records found').show();
+        } else {
+            elementRecordsFound.text('no records found');
+        }
     }
 
 }
@@ -62,7 +92,7 @@ var Gallery = {
 var toggleLoadingGif = function () {
     $('#loading').show();
     $('#results').hide();
-    $('.pagination').hide();
+//    $('.pagination').hide();
 }
 
 var showResults = function () {
