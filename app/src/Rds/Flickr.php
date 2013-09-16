@@ -28,122 +28,102 @@ class Flickr
     protected $api = "http://api.flickr.com/services/rest/";
     protected $method = "flickr.photos.search";
     protected $apiKey = "b88d6f91952505a72c4eabac4950c072";
-    protected $tag;
+    protected $tag = array();
     protected $perPage = 5;
     protected $page = 1;
     protected $format = 'rest';
 
-    /**
-     * @param string $apiKey
-     */
     public function setApiKey($apiKey)
     {
         $this->apiKey = $apiKey;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getApiKey()
     {
         return $this->apiKey;
     }
 
-    /**
-     * @param string $format
-     */
     public function setFormat($format)
     {
         $this->format = $format;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getFormat()
     {
         return $this->format;
     }
 
-    /**
-     * @param string $method
-     */
     public function setMethod($method)
     {
         $this->method = $method;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getMethod()
     {
         return $this->method;
     }
 
-    /**
-     * @param mixed $page
-     */
     public function setPage($page)
     {
         $this->page = $page;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getPage()
     {
         return $this->page;
     }
 
-    /**
-     * @param int $perPage
-     */
     public function setPerPage($perPage)
     {
         $this->perPage = $perPage;
+
+        return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getPerPage()
     {
         return $this->perPage;
     }
 
-    /**
-     * @param mixed $tag
-     */
     public function setTag($tag)
     {
-        $this->tag = $tag;
+        $tags = explode(" ", $tag);
+
+        foreach ($tags as $tag) {
+            $this->tag[] = $tag;
+        }
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getTag()
     {
-        return $this->tag;
+        return implode(',', $this->tag);
     }
 
     public function getUrl()
     {
         return $this->api
-            . '?method='
-            . $this->method
-            . '&api_key='
-            . $this->apiKey
-            . '&tags='
-            . $this->tag
-            . '&per_page='
-            . $this->perPage
-            . '&page='
-            . $this->page
-            . '&format='
-            . $this->format;
+        . '?method='
+        . $this->getMethod()
+        . '&api_key='
+        . $this->getApiKey()
+        . '&tags='
+        . $this->getTag()
+        . '&per_page='
+        . $this->getPerPage()
+        . '&page='
+        . $this->getPage()
+        . '&format='
+        . $this->getFormat();
     }
 
     public function search()
@@ -158,11 +138,8 @@ class Flickr
         $response = ob_get_contents();
         ob_end_clean();
 
-//        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
         curl_close($ch);
 
-//        return array($httpCode, $response);
         return $response;
     }
 
