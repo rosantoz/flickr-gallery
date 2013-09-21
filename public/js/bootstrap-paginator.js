@@ -416,9 +416,9 @@
 
             }
 
-            this.lastPage = this.currentPage;
 
             this.currentPage = parseInt(page, 10);
+            this.lastPage = this.currentPage;
 
         },
 

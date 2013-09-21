@@ -9,8 +9,12 @@
     display: none;
 }
 
-.pagination {
+#search-title {
     display: none;
+}
+
+.pagination {
+    /*display: none;*/
 }
 
 #records-found {

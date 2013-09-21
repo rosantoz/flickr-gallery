@@ -2,6 +2,8 @@ $(document).ready(function () {
     $('#flickr-search').on('submit', function (event) {
         event.preventDefault();
         var search = $('#searchInput').val();
-        Gallery.search(search);
+        if (search.length >= 2) {
+            Gallery.search(search);
+        }
     });
 });
