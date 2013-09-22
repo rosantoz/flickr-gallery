@@ -45,19 +45,14 @@ var Gallery = {
 
         photos.each(function (index, photo) {
 
-            var elementPhoto = $(photo);
+            var elementPhoto = $(photo)
+                , farm = elementPhoto.attr('farm')
+                , server = elementPhoto.attr('server')
+                , photoId = elementPhoto.attr('id')
+                , photoSecret = elementPhoto.attr('secret')
+                , photoUrl = Gallery.photoUrl(farm, server, photoId, photoSecret, 'n')
+                , thumbnail = $('<li class="span2"></li>');
 
-            photoUrl = 'http://farm'
-                           + elementPhoto.attr('farm')
-                           + '.staticflickr.com/'
-                           + elementPhoto.attr('server')
-                           + '/'
-                           + elementPhoto.attr('id')
-                           + '_'
-                           + elementPhoto.attr('secret')
-                + '_n.jpg';
-
-            var thumbnail = $('<li class="span2"></li>');
             thumbnail.append('<a href="#" class="thumbnail" data-photoid="' + elementPhoto.attr('id') + '"><img src="' + photoUrl + '" /></a>');
             thumbnails.append(thumbnail);
 
@@ -132,27 +127,39 @@ var Gallery = {
             , photoTitle = photoTitleElement.text()
             , photoDescription = elementPhoto.find('description').text()
             , photographer = elementPhoto.find('owner').attr('realname')
-            , photoUrl = 'http://farm'
-                             + elementPhoto.attr('farm')
-                             + '.staticflickr.com/'
-                             + elementPhoto.attr('server')
-                             + '/'
-                             + elementPhoto.attr('id')
-                             + '_'
-                             + elementPhoto.attr('secret')
-                + '_z.jpg',
-            imageElement = $('<img src="' + photoUrl + '" alt="' + photoTitle + '"/>');
+            , farm = elementPhoto.attr('farm')
+            , server = elementPhoto.attr('server')
+            , photoId = elementPhoto.attr('id')
+            , photoSecret = elementPhoto.attr('secret')
+            , photoUrl = Gallery.photoUrl(farm, server, photoId, photoSecret, 'z')
+            , flickrUrl = elementPhoto.find('urls').find('url[type="photopage"]').text()
+            , imageLink = $('<a href="' + flickrUrl + '" title="' + photoTitle + '" target="_blank"></a>')
+            , imageElement = $('<img src="' + photoUrl + '" alt="' + photoTitle + '" border="0"/>')
+            , userId = elementPhoto.find('owner').attr('nsid');
 
         $("#photoTitle").text(photoTitle);
-        $(".modal-body").html(imageElement);
-        $("#photo-description").text(photoDescription);
+        imageLink.append(imageElement);
+        $(".modal-body").html(imageLink);
+        $("#photo-description").html(photoDescription);
         if (photographer.length) {
-            $("#photo-author").text('by ' + photographer);
+            var userProfile = '<a href="http://www.flickr.com/people/' + userId + '" target="_blank">by ' + photographer + '</a>';
+            $("#photo-author").html(userProfile);
         }
         $("#photoDetailsModal").modal();
     },
     detailsError  : function () {
         console.log('error');
+    },
+    photoUrl      : function (farm, server, id, secret, size) {
+        return 'http://farm'
+                   + farm
+                   + '.staticflickr.com/'
+                   + server
+                   + '/'
+                   + id
+                   + '_'
+                   + secret
+                   + '_' + size + '.jpg';
     }
 
 }
