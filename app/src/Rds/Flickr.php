@@ -26,12 +26,13 @@ namespace Rds;
 class Flickr
 {
     protected $api = "http://api.flickr.com/services/rest/";
-    protected $method = "flickr.photos.search";
     protected $apiKey = "b88d6f91952505a72c4eabac4950c072";
     protected $tag = array();
     protected $perPage = 5;
     protected $page = 1;
     protected $format = 'rest';
+    protected $method;
+    protected $photoId;
 
     public function setApiKey($apiKey)
     {
@@ -109,6 +110,18 @@ class Flickr
         return implode(',', $this->tag);
     }
 
+    public function setPhotoId($photoId)
+    {
+        $this->photoId = $photoId;
+
+        return $this;
+    }
+
+    public function getPhotoId()
+    {
+        return $this->photoId;
+    }
+
     public function getUrl()
     {
         return $this->api
@@ -123,7 +136,9 @@ class Flickr
         . '&page='
         . $this->getPage()
         . '&format='
-        . $this->getFormat();
+        . $this->getFormat()
+        . '&photo_id='
+        . $this->getPhotoId();
     }
 
     public function search()

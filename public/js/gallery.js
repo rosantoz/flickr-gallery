@@ -1,12 +1,13 @@
 var Gallery = {
-    search         : function (search, page) {
+    search        : function (search, page) {
         page = typeof page !== 'undefined' ? page : 1;
 
         $.ajax('flickr.php', {
             type      : 'POST',
             data      : {
-                search: search,
-                page  : page
+                request: 'search',
+                search : search,
+                page   : page
             },
             success   : function (response) {
                 var xmlDoc = $.parseXML(response)
@@ -15,9 +16,9 @@ var Gallery = {
                     , status = rsp.attr('stat');
 
                 if (status == 'ok') {
-                    Gallery.successResponse(xml, search, page);
+                    Gallery.searchSuccess(xml, search, page);
                 } else {
-                    Gallery.errorResponse();
+                    Gallery.searchError();
                 }
             },
             error     : function (jqXHR, textStatus) {
@@ -32,7 +33,7 @@ var Gallery = {
             }
         });
     },
-    successResponse: function (xml, search, page) {
+    searchSuccess : function (xml, search, page) {
 
         var photos = xml.find('photo')
             , currentPage = xml.find('photos').attr('page')
@@ -57,7 +58,7 @@ var Gallery = {
                 + '_n.jpg';
 
             var thumbnail = $('<li class="span2"></li>');
-            thumbnail.append('<a href="#" class="thumbnail"><img src="' + photoUrl + '" /></a>');
+            thumbnail.append('<a href="#" class="thumbnail" data-photoid="' + elementPhoto.attr('id') + '"><img src="' + photoUrl + '" /></a>');
             thumbnails.append(thumbnail);
 
             $('#query').text('"' + search + '"');
@@ -71,14 +72,14 @@ var Gallery = {
 
         });
     },
-    errorResponse  : function () {
+    searchError   : function () {
         $('#search-title').show();
         $("#records-found").show().text('Something went wrong. Please try again!');
         $("#query").text('');
         $("#pagination").html('');
         $(".thumbnails").html('');
     },
-    pagination     : function (current, total, search) {
+    pagination    : function (current, total, search) {
 
         var options = {
             currentPage  : current,
@@ -91,7 +92,7 @@ var Gallery = {
         }
         $('#pagination').bootstrapPaginator(options);
     },
-    recordsFound   : function (recordsFound) {
+    recordsFound  : function (recordsFound) {
         var elementRecordsFound = $('#records-found');
         elementRecordsFound.text('');
         if (recordsFound > 0) {
@@ -99,6 +100,59 @@ var Gallery = {
         } else {
             elementRecordsFound.text('no records found');
         }
+    },
+    photoDetails  : function (photoId) {
+
+        $.ajax('flickr.php', {
+            type   : 'POST',
+            data   : {
+                request: 'details',
+                photo  : photoId
+            },
+            success: function (response) {
+                var xmlDoc = $.parseXML(response)
+                    , xml = $(xmlDoc)
+                    , rsp = xml.find('rsp')
+                    , status = rsp.attr('stat');
+
+                if (status == 'ok') {
+                    Gallery.detailsSuccess(xml);
+                } else {
+                    Gallery.detailsError();
+                }
+            }
+
+        });
+
+    },
+    detailsSuccess: function (xml) {
+
+        var elementPhoto = xml.find('photo')
+            , photoTitleElement = elementPhoto.find('title')
+            , photoTitle = photoTitleElement.text()
+            , photoDescription = elementPhoto.find('description').text()
+            , photographer = elementPhoto.find('owner').attr('realname')
+            , photoUrl = 'http://farm'
+                             + elementPhoto.attr('farm')
+                             + '.staticflickr.com/'
+                             + elementPhoto.attr('server')
+                             + '/'
+                             + elementPhoto.attr('id')
+                             + '_'
+                             + elementPhoto.attr('secret')
+                + '_z.jpg',
+            imageElement = $('<img src="' + photoUrl + '" alt="' + photoTitle + '"/>');
+
+        $("#photoTitle").text(photoTitle);
+        $(".modal-body").html(imageElement);
+        $("#photo-description").text(photoDescription);
+        if (photographer.length) {
+            $("#photo-author").text('by ' + photographer);
+        }
+        $("#photoDetailsModal").modal();
+    },
+    detailsError  : function () {
+        console.log('error');
     }
 
 }
