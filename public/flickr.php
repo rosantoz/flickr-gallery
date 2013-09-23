@@ -1,4 +1,15 @@
 <?php
+/**
+ * Flickr Search
+ *
+ * PHP version 5.5.3
+ *
+ * @category Pet_Projects
+ * @package  Rds
+ * @author   Rodrigo dos Santos <email@rodrigodossantos.ws>
+ * @license  http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @link     https://github.com/rosantoz
+ */
 
 require_once '../app/config/config.php';
 
