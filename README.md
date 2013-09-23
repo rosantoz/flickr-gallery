@@ -12,6 +12,6 @@ clicking on the thumbnail opens a modal window which shows the image in larger s
 Demo
 =======================
 
-See the project demo <a href="https://github.com/rosantoz/flickr-gallery" target="_blank">here</a>
+See the project demo <a href="htts://flickr-gallery.dossantos.com.au" target="_blank">here</a>
 
 Twitter: <a href="http://twitter.com/rosantoz" target="_blank">@rosantoz</a>
