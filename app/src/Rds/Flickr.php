@@ -25,7 +25,7 @@ namespace Rds;
  */
 class Flickr
 {
-    protected $api = "http://api.flickr.com/services/rest/";
+    protected $api = "https://api.flickr.com/services/rest/";
     protected $apiKey = "b88d6f91952505a72c4eabac4950c072";
     protected $tag = array();
     protected $perPage = 5;
